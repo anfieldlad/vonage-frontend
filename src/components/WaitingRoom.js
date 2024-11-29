@@ -22,10 +22,10 @@ const WaitingRoom = () => {
         throw new Error('Failed to join room');
       }
 
-      const { apiKey, sessionId, token } = await response.json();
+      const { sessionId, token } = await response.json();
 
       // Navigate to the Room component with session details
-      navigate('/room', { state: { apiKey, sessionId, token, roomName, userName, role } });
+      navigate('/room', { state: { sessionId, token, roomName, userName, role } });
     } catch (error) {
       console.error('Error joining room:', error.message);
     }
