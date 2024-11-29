@@ -9,8 +9,9 @@ const WaitingRoom = () => {
 
   const joinRoom = async () => {
     try {
-      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-      // Fetch sessionId and token from backend
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; // Use the backend URL from environment variables
+
+      // Fetch apiKey, sessionId, and token from backend
       const response = await fetch(`${BACKEND_URL}/api/join-room`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -21,10 +22,10 @@ const WaitingRoom = () => {
         throw new Error('Failed to join room');
       }
 
-      const { sessionId, token } = await response.json();
+      const { apiKey, sessionId, token } = await response.json();
 
       // Navigate to the Room component with session details
-      navigate('/room', { state: { sessionId, token, roomName, userName, role } });
+      navigate('/room', { state: { apiKey, sessionId, token, roomName, userName, role } });
     } catch (error) {
       console.error('Error joining room:', error.message);
     }

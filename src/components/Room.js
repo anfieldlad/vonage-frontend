@@ -7,19 +7,17 @@ const Room = () => {
   const navigate = useNavigate();
   const videoContainerRef = useRef(null);
 
-  const { sessionId, token, roomName, userName, role } = state || {};
+  const { apiKey, sessionId, token, roomName, userName, role } = state || {};
 
   useEffect(() => {
-    if (!sessionId || !token) {
-      console.error('Missing session details');
+    if (!apiKey || !sessionId || !token) {
+      console.error('Missing session details or API key');
       navigate('/');
       return;
     }
 
-    const appId = process.env.REACT_APP_VONAGE_APP_ID;
-
     // Initialize session
-    const session = OT.initSession(appId, sessionId);
+    const session = OT.initSession(apiKey, sessionId);
 
     // Handle stream creation
     session.on('streamCreated', (event) => {
@@ -61,7 +59,7 @@ const Room = () => {
     return () => {
       session.disconnect();
     };
-  }, [sessionId, token, userName, role, navigate]);
+  }, [apiKey, sessionId, token, userName, role, navigate]);
 
   return (
     <div>
