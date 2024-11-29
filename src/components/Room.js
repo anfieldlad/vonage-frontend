@@ -18,6 +18,9 @@ const Room = () => {
 
     const appId = process.env.REACT_APP_VONAGE_APP_ID;
 
+    console.log('Received API Key:', appId);
+    console.log('Received Session ID:', sessionId);
+    console.log('Received Token:', token);
     // Initialize session
     const session = OT.initSession(appId, sessionId);
 
