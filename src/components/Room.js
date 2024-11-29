@@ -1,17 +1,23 @@
 import React, { useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import OT from '@opentok/client';
 
-const Room = ({ appId, sessionId, token }) => {
+const Room = () => {
+  const { state } = useLocation();
+  const navigate = useNavigate();
   const videoContainerRef = useRef(null);
 
+  const { sessionId, token, roomName, userName, role } = state || {};
+
   useEffect(() => {
-    if (!appId || !sessionId || !token) {
-      console.error('Missing required parameters');
+    if (!sessionId || !token) {
+      console.error('Missing session details');
+      navigate('/');
       return;
     }
 
     // Initialize session
-    const session = OT.initSession(appId, sessionId);
+    const session = OT.initSession('<YOUR_API_KEY>', sessionId);
 
     // Handle stream creation
     session.on('streamCreated', (event) => {
@@ -33,6 +39,8 @@ const Room = ({ appId, sessionId, token }) => {
       if (err) {
         console.error('Error connecting to session:', err);
       } else {
+        console.log(`Connected to session as ${userName} (${role})`);
+
         // Publish local stream
         const publisherContainer = document.createElement('div');
         publisherContainer.style.width = '300px';
@@ -51,11 +59,11 @@ const Room = ({ appId, sessionId, token }) => {
     return () => {
       session.disconnect();
     };
-  }, [appId, sessionId, token]);
+  }, [sessionId, token, userName, role, navigate]);
 
   return (
     <div>
-      <h1>Video Room</h1>
+      <h1>Room: {roomName}</h1>
       <div ref={videoContainerRef} style={{ display: 'flex', flexWrap: 'wrap' }}></div>
     </div>
   );
