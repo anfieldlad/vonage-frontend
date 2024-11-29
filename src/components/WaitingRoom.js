@@ -9,8 +9,9 @@ const WaitingRoom = () => {
 
   const joinRoom = async () => {
     try {
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       // Fetch sessionId and token from backend
-      const response = await fetch('/api/join-room', {
+      const response = await fetch(`${BACKEND_URL}/api/join-room`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ roomName, userName, role }),

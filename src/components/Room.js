@@ -16,8 +16,10 @@ const Room = () => {
       return;
     }
 
+    const appId = process.env.REACT_APP_VONAGE_APP_ID;
+
     // Initialize session
-    const session = OT.initSession('<YOUR_API_KEY>', sessionId);
+    const session = OT.initSession(appId, sessionId);
 
     // Handle stream creation
     session.on('streamCreated', (event) => {
