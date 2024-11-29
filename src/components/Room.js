@@ -7,25 +7,31 @@ const Room = () => {
   const navigate = useNavigate();
   const videoContainerRef = useRef(null);
 
-  const { sessionId, token, roomName, userName, role } = state || {};
+  const { apiKey, sessionId, token, roomName, userName, role } = state || {};
 
   useEffect(() => {
-    if (!sessionId || !token) {
-      console.error('Missing session details');
+    if (!apiKey || !sessionId || !token) {
+      console.error('Missing session details or API key');
       navigate('/');
       return;
     }
 
-    const appId = process.env.REACT_APP_VONAGE_APP_ID;
-
-    console.log('Received API Key:', appId);
+    console.log('Received API Key:', apiKey);
     console.log('Received Session ID:', sessionId);
     console.log('Received Token:', token);
+
     // Initialize session
-    const session = OT.initSession(appId, sessionId);
+    const session = OT.initSession(apiKey, sessionId);
 
     // Handle stream creation
     session.on('streamCreated', (event) => {
+      console.log('Stream Created:', event.stream);
+
+      if (!videoContainerRef.current) {
+        console.error('videoContainerRef is null. Skipping append.');
+        return;
+      }
+
       const subscriberContainer = document.createElement('div');
       subscriberContainer.id = `subscriber-${event.stream.streamId}`;
       subscriberContainer.style.width = '300px';
@@ -39,6 +45,16 @@ const Room = () => {
       });
     });
 
+    // Handle session disconnection
+    session.on('sessionDisconnected', (event) => {
+      console.log('Session Disconnected:', event.reason);
+    });
+
+    // Handle errors
+    session.on('error', (error) => {
+      console.error('Session Error:', error.message);
+    });
+
     // Connect to session
     session.connect(token, (err) => {
       if (err) {
@@ -47,6 +63,11 @@ const Room = () => {
         console.log(`Connected to session as ${userName} (${role})`);
 
         // Publish local stream
+        if (!videoContainerRef.current) {
+          console.error('videoContainerRef is null. Skipping publisher append.');
+          return;
+        }
+
         const publisherContainer = document.createElement('div');
         publisherContainer.style.width = '300px';
         publisherContainer.style.height = '200px';
@@ -62,9 +83,10 @@ const Room = () => {
 
     // Cleanup on unmount
     return () => {
+      console.log('Cleaning up session');
       session.disconnect();
     };
-  }, [sessionId, token, userName, role, navigate]);
+  }, [apiKey, sessionId, token, userName, role, navigate]);
 
   return (
     <div>
