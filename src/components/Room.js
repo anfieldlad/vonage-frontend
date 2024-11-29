@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import OT from '@vonage/client-sdk-video';
+import OT from '@opentok/client';
 
 const Room = ({ appId, sessionId, token }) => {
   const videoContainerRef = useRef(null);
