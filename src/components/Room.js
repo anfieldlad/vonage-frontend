@@ -1,42 +1,48 @@
 import React, { useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import OT from '@opentok/client';
+import OT from '@vonage/client-sdk-video';
 
-const Room = () => {
-  const { state } = useLocation();
-  const navigate = useNavigate();
-  const { roomName, sessionId, token, userName } = state || {};
-
-  const subscriberContainer = useRef(null);
-  const publisherContainer = useRef(null);
+const Room = ({ appId, sessionId, token }) => {
+  const videoContainerRef = useRef(null);
 
   useEffect(() => {
-    if (!sessionId || !token) {
-      navigate('/');
+    if (!appId || !sessionId || !token) {
+      console.error('Missing required parameters');
       return;
     }
 
-    // Initialize the session
-    const session = OT.initSession('<YOUR_API_KEY>', sessionId);
+    // Initialize session
+    const session = OT.initSession(appId, sessionId);
 
-    // Connect to the session
+    // Handle stream creation
+    session.on('streamCreated', (event) => {
+      const subscriberContainer = document.createElement('div');
+      subscriberContainer.id = `subscriber-${event.stream.streamId}`;
+      subscriberContainer.style.width = '300px';
+      subscriberContainer.style.height = '200px';
+      subscriberContainer.style.margin = '10px';
+      videoContainerRef.current.appendChild(subscriberContainer);
+
+      // Subscribe to the stream
+      session.subscribe(event.stream, subscriberContainer, { insertMode: 'append' }, (err) => {
+        if (err) console.error('Error subscribing to stream:', err);
+      });
+    });
+
+    // Connect to session
     session.connect(token, (err) => {
       if (err) {
         console.error('Error connecting to session:', err);
       } else {
-        console.log('Connected to session as', userName);
+        // Publish local stream
+        const publisherContainer = document.createElement('div');
+        publisherContainer.style.width = '300px';
+        publisherContainer.style.height = '200px';
+        publisherContainer.style.margin = '10px';
+        videoContainerRef.current.appendChild(publisherContainer);
 
-        // Publish to the session
-        const publisher = OT.initPublisher(publisherContainer.current);
-        session.publish(publisher, (error) => {
-          if (error) console.error('Error publishing:', error);
-        });
-
-        // Subscribe to other streams
-        session.on('streamCreated', (event) => {
-          session.subscribe(event.stream, subscriberContainer.current, (error) => {
-            if (error) console.error('Error subscribing to stream:', error);
-          });
+        const publisher = OT.initPublisher(publisherContainer, { insertMode: 'append' });
+        session.publish(publisher, (err) => {
+          if (err) console.error('Error publishing stream:', err);
         });
       }
     });
@@ -45,19 +51,12 @@ const Room = () => {
     return () => {
       session.disconnect();
     };
-  }, [sessionId, token, userName, navigate]);
+  }, [appId, sessionId, token]);
 
   return (
     <div>
-      <h1>Room: {roomName}</h1>
-      <div>
-        <h2>Publisher</h2>
-        <div ref={publisherContainer} style={{ width: '400px', height: '300px', backgroundColor: '#ddd' }}></div>
-      </div>
-      <div>
-        <h2>Subscriber</h2>
-        <div ref={subscriberContainer} style={{ width: '400px', height: '300px', backgroundColor: '#ddd' }}></div>
-      </div>
+      <h1>Video Room</h1>
+      <div ref={videoContainerRef} style={{ display: 'flex', flexWrap: 'wrap' }}></div>
     </div>
   );
 };
