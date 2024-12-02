@@ -173,12 +173,11 @@ const Room = () => {
                 <h1 className="room-title">Room: {roomName}</h1>
                 <div className="user-info">You are logged in as: {userName}</div>
             </header>
-            <div className="video-grid-wrapper">
-                <div
-                    ref={videoContainerRef}
-                    className={`video-grid video-grid-${participants.length} ${isChatVisible ? 'chat-visible' : ''}`}
-                ></div>
-            </div>
+            <div
+                ref={videoContainerRef}
+                className={`video-grid video-grid-${participants.length} ${isChatVisible ? 'chat-visible' : ''}`}
+            ></div>
+
             <div className="room-controls">
                 <button
                     className={`control-btn ${isVideoEnabled ? 'enabled' : 'disabled'}`}
