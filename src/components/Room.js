@@ -7,11 +7,11 @@ const Room = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const videoContainerRef = useRef(null);
-  const publisherRef = useRef(null);
+  const chatInputRef = useRef(null);
 
   const [participants, setParticipants] = useState([]);
-  const [isVideoEnabled, setVideoEnabled] = useState(true);
-  const [isAudioEnabled, setAudioEnabled] = useState(true);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
 
   const { sessionId, token, roomName, userName } = state || {};
 
@@ -73,6 +73,13 @@ const Room = () => {
       setParticipants((prev) => prev.filter((p) => p.id !== streamId));
     });
 
+    // Handle receiving messages
+    session.on('signal:chat', (event) => {
+      const sender = event.from.connectionId === session.connection.connectionId ? 'You' : event.from.data;
+      const message = event.data;
+      setMessages((prev) => [...prev, { sender, message }]);
+    });
+
     // Connect to session
     session.connect(token, (err) => {
       if (err) {
@@ -101,8 +108,6 @@ const Room = () => {
           if (err) console.error('Error publishing stream:', err);
         });
 
-        publisherRef.current = publisher;
-
         // Add self to participants
         setParticipants((prev) => [...prev, { id: 'publisher', name: userName }]);
       }
@@ -113,20 +118,26 @@ const Room = () => {
     };
   }, [sessionId, token, userName, navigate]);
 
-  const toggleVideo = () => {
-    if (publisherRef.current) {
-      const isCurrentlyEnabled = publisherRef.current.stream.hasVideo;
-      publisherRef.current.publishVideo(!isCurrentlyEnabled);
-      setVideoEnabled(!isCurrentlyEnabled);
-    }
-  };
+  const sendMessage = () => {
+    if (newMessage.trim() === '') return;
 
-  const toggleAudio = () => {
-    if (publisherRef.current) {
-      const isCurrentlyEnabled = publisherRef.current.stream.hasAudio;
-      publisherRef.current.publishAudio(!isCurrentlyEnabled);
-      setAudioEnabled(!isCurrentlyEnabled);
-    }
+    const appId = process.env.REACT_APP_VONAGE_APP_ID;
+    const session = OT.initSession(appId, sessionId);
+
+    session.signal(
+      {
+        type: 'chat',
+        data: newMessage,
+      },
+      (error) => {
+        if (error) {
+          console.error('Error sending signal:', error);
+        } else {
+          setMessages((prev) => [...prev, { sender: 'You', message: newMessage }]);
+          setNewMessage('');
+        }
+      }
+    );
   };
 
   return (
@@ -135,23 +146,25 @@ const Room = () => {
         <h1 className="room-title">Room: {roomName}</h1>
         <div className="user-info">You are logged in as: {userName}</div>
       </header>
-      <div
-        ref={videoContainerRef}
-        className={`video-grid video-grid-${participants.length}`}
-      ></div>
-      <div className="room-controls">
-        <button
-          className={`control-btn ${isVideoEnabled ? 'enabled' : 'disabled'}`}
-          onClick={toggleVideo}
-        >
-          <i className={`fas ${isVideoEnabled ? 'fa-video' : 'fa-video-slash'}`}></i>
-        </button>
-        <button
-          className={`control-btn ${isAudioEnabled ? 'enabled' : 'disabled'}`}
-          onClick={toggleAudio}
-        >
-          <i className={`fas ${isAudioEnabled ? 'fa-microphone' : 'fa-microphone-slash'}`}></i>
-        </button>
+      <div ref={videoContainerRef} className={`video-grid video-grid-${participants.length}`}></div>
+      <div className="chat-container">
+        <div className="chat-messages">
+          {messages.map((msg, index) => (
+            <div key={index} className="chat-message">
+              <strong>{msg.sender}: </strong> {msg.message}
+            </div>
+          ))}
+        </div>
+        <div className="chat-input">
+          <input
+            ref={chatInputRef}
+            type="text"
+            value={newMessage}
+            placeholder="Type a message..."
+            onChange={(e) => setNewMessage(e.target.value)}
+          />
+          <button onClick={sendMessage}>Send</button>
+        </div>
       </div>
     </div>
   );
