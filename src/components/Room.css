@@ -151,7 +151,7 @@ html, body {
   bottom: 0;
   width: 100%;
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
-  z-index: 999;
+  z-index: 99;
 }
 
 .control-btn {
