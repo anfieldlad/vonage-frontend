@@ -40,13 +40,16 @@ html, body {
   padding: 1rem;
   justify-items: center;
   align-items: center;
-  padding-bottom: 70px;
-  transition: margin-right 0.3s ease, grid-template-columns 0.3s ease; /* Smooth transition */
+  transition: width 0.3s ease, margin-right 0.3s ease; /* Smooth animation */
 }
 
-/* Jika chat sidebar aktif */
 .video-grid.chat-visible {
-  margin-right: 25%; /* Sisakan ruang untuk chat sidebar */
+  width: 75%; /* Chat sidebar aktif */
+}
+
+/* Default width saat chat tidak aktif */
+.video-grid {
+  width: 100%;
 }
 
 /* Grid Layout untuk 1 peserta */
@@ -59,39 +62,24 @@ html, body {
   overflow: hidden;
 }
 
-.video-grid-1.chat-visible {
-  width: 75%; /* Kurangi ukuran saat chat sidebar aktif */
-}
-
 /* Grid Layout untuk 2 peserta */
 .video-grid-2 {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 1fr;
 }
 
-.video-grid-2.chat-visible {
-  grid-template-columns: repeat(2, 1fr);
-  margin-right: 25%;
-}
-
 /* Grid Layout untuk 3-4 peserta */
-.video-grid-3, .video-grid-4 {
+.video-grid-3,
+.video-grid-4 {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-}
-
-.video-grid-3.chat-visible, .video-grid-4.chat-visible {
-  margin-right: 25%;
 }
 
 /* Grid Layout untuk 5-6 peserta */
-.video-grid-5, .video-grid-6 {
+.video-grid-5,
+.video-grid-6 {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
-}
-
-.video-grid-5.chat-visible, .video-grid-6.chat-visible {
-  margin-right: 25%;
 }
 
 /* Video Container */
@@ -101,8 +89,8 @@ html, body {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  width: 98%;
-  height: auto;
+  width: 98%; /* Isi seluruh grid */
+  height: auto; /* Tinggi disesuaikan */
   max-width: 100%;
   max-height: 100%;
   aspect-ratio: 16 / 9;
@@ -123,10 +111,13 @@ html, body {
   z-index: 5;
 }
 
-.OT_publisher, .OT_subscriber {
+.OT_publisher,
+.OT_subscriber {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
   position: absolute;
   top: 0;
   left: 0;
@@ -234,4 +225,15 @@ html, body {
 
 .chat-input button:hover {
   background: #5ad3b0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chat-sidebar {
+    width: 50%;
+  }
+
+  .video-grid.chat-visible {
+    width: 50%;
+  }
 }
