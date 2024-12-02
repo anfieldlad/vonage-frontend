@@ -77,7 +77,7 @@ html, body {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  width: 100%; /* Isi seluruh grid */
+  width: 98%; /* Isi seluruh grid */
   height: auto; /* Tinggi disesuaikan */
   max-width: 100%; /* Maksimal sesuai grid */
   max-height: 100%; /* Maksimal sesuai tinggi layar */
