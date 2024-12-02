@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OT from '@opentok/client';
 import './Room.css';
@@ -7,38 +7,30 @@ const Room = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const videoContainerRef = useRef(null);
+  const [participants, setParticipants] = useState([]);
 
   const { sessionId, token, roomName, userName, role } = state || {};
 
   useEffect(() => {
     if (!sessionId || !token) {
-      console.error('Missing session details or token is invalid.');
+      console.error('Missing session details');
       navigate('/');
       return;
     }
 
     const appId = process.env.REACT_APP_VONAGE_APP_ID;
-
-    console.log('Received API Key:', appId);
-    console.log('Received Session ID:', sessionId);
-    console.log('Received Token:', token);
-
-    // Initialize session
     const session = OT.initSession(appId, sessionId);
 
     // Handle stream creation
     session.on('streamCreated', (event) => {
-      console.log('Stream Created for Connection:', event.stream.connection);
       const connectionData = JSON.parse(event.stream.connection.data || '{}');
       const subscriberName = connectionData.name || 'Unknown User';
 
-      if (!videoContainerRef.current) {
-        console.error('videoContainerRef is null. Skipping append for subscriber.');
-        return;
-      }
+      if (!videoContainerRef.current) return;
 
       const subscriberContainer = document.createElement('div');
       subscriberContainer.className = 'video-container';
+      subscriberContainer.id = `subscriber-${event.stream.streamId}`;
 
       const nameTag = document.createElement('div');
       nameTag.className = 'name-tag';
@@ -47,9 +39,23 @@ const Room = () => {
       subscriberContainer.appendChild(nameTag);
       videoContainerRef.current.appendChild(subscriberContainer);
 
+      // Subscribe to the stream
       session.subscribe(event.stream, subscriberContainer, { insertMode: 'append' }, (err) => {
         if (err) console.error('Error subscribing to stream:', err);
       });
+
+      // Add participant to state
+      setParticipants((prev) => [...prev, { id: event.stream.streamId, name: subscriberName }]);
+    });
+
+    // Handle stream destruction
+    session.on('streamDestroyed', (event) => {
+      const streamId = event.stream.streamId;
+      const element = document.getElementById(`subscriber-${streamId}`);
+      if (element) {
+        element.remove();
+      }
+      setParticipants((prev) => prev.filter((p) => p.id !== streamId));
     });
 
     // Connect to session
@@ -57,10 +63,11 @@ const Room = () => {
       if (err) {
         console.error('Error connecting to session:', err);
       } else {
-        console.log(`Connected to session as ${userName} (${role})`);
+        console.log(`Connected to session as ${userName}`);
 
         const publisherContainer = document.createElement('div');
         publisherContainer.className = 'video-container';
+        publisherContainer.id = 'publisher';
 
         const nameTag = document.createElement('div');
         nameTag.className = 'name-tag';
@@ -73,13 +80,16 @@ const Room = () => {
         session.publish(publisher, (err) => {
           if (err) console.error('Error publishing stream:', err);
         });
+
+        // Add self to participants
+        setParticipants((prev) => [...prev, { id: 'publisher', name: userName }]);
       }
     });
 
     return () => {
       session.disconnect();
     };
-  }, [sessionId, token, userName, role, navigate]);
+  }, [sessionId, token, userName, navigate]);
 
   return (
     <div className="room-container">
@@ -87,7 +97,10 @@ const Room = () => {
         <h1 className="room-title">Room: {roomName}</h1>
         <div className="user-info">You are logged in as: {userName}</div>
       </header>
-      <div ref={videoContainerRef} className="video-grid"></div>
+      <div
+        ref={videoContainerRef}
+        className={`video-grid video-grid-${participants.length}`}
+      ></div>
     </div>
   );
 };
