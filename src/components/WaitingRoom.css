@@ -1,67 +1,70 @@
-/* WaitingRoom.css */
-body {
-  margin: 0;
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(to bottom, #a8dadc, #457b9d);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
+/* General container styling */
 .waiting-room-container {
-  background: #ffffff;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  text-align: center;
-  width: 400px;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #1d3557;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #457b9d;
-  box-shadow: 0 0 5px rgba(69, 123, 157, 0.5);
-}
-
-.join-btn {
-  width: 100%;
-  padding: 12px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #fff;
-  background: #2a9d8f;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.join-btn:hover {
-  background: #21867a;
-}
-
-.join-btn:active {
-  background: #1d6f63;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #74ebd5, #acb6e5);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  /* Title styling */
+  .title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Form container styling */
+  .form-container {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+  }
+  
+  /* Input field styling */
+  .input {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  /* Radio group styling */
+  .radio-group {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .radio-group label {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  /* Button styling */
+  .join-btn {
+    background-color: #74ebd5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+  }
+  
+  .join-btn:hover {
+    background-color: #5ad3b0;
+  }
+  
