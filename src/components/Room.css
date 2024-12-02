@@ -152,15 +152,22 @@ html, body {
   font-size: 1.2rem;
 }
 
-/* Chat Container */
+/* Room Content with Chat */
+.room-content {
+  display: flex;
+  height: calc(100vh - 60px); /* Adjust for header height */
+}
+
+.video-grid.with-chat {
+  flex: 3;
+}
+
 .chat-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: 30vh;
   background-color: #1e1e1e;
-  border-top: 1px solid #333;
-  padding: 10px;
-  overflow: hidden;
+  border-left: 1px solid #333;
 }
 
 .chat-messages {
@@ -204,4 +211,18 @@ html, body {
 
 .chat-input button:hover {
   background-color: #45a049;
+}
+
+.toggle-chat-btn {
+  padding: 10px;
+  background-color: #74ebd5;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.toggle-chat-btn:hover {
+  background-color: #5ad3b0;
 }

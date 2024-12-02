@@ -12,6 +12,7 @@ const Room = () => {
   const [participants, setParticipants] = useState([]);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [isChatVisible, setIsChatVisible] = useState(false); // Toggle chat visibility
 
   const { sessionId, token, roomName, userName } = state || {};
 
@@ -43,7 +44,6 @@ const Room = () => {
       subscriberContainer.appendChild(nameTag);
       videoContainerRef.current.appendChild(subscriberContainer);
 
-      // Subscribe to the stream
       session.subscribe(
         event.stream,
         subscriberContainer,
@@ -53,13 +53,10 @@ const Room = () => {
           height: '100%',
         },
         (err) => {
-          if (err) {
-            console.error('Error subscribing to stream:', err);
-          }
+          if (err) console.error('Error subscribing to stream:', err);
         }
       );
 
-      // Add participant to state
       setParticipants((prev) => [...prev, { id: event.stream.streamId, name: subscriberName }]);
     });
 
@@ -67,9 +64,7 @@ const Room = () => {
     session.on('streamDestroyed', (event) => {
       const streamId = event.stream.streamId;
       const element = document.getElementById(`subscriber-${streamId}`);
-      if (element) {
-        element.remove();
-      }
+      if (element) element.remove();
       setParticipants((prev) => prev.filter((p) => p.id !== streamId));
     });
 
@@ -80,13 +75,10 @@ const Room = () => {
       setMessages((prev) => [...prev, { sender, message }]);
     });
 
-    // Connect to session
     session.connect(token, (err) => {
       if (err) {
         console.error('Error connecting to session:', err);
       } else {
-        console.log(`Connected to session as ${userName}`);
-
         const publisherContainer = document.createElement('div');
         publisherContainer.className = 'video-container';
         publisherContainer.id = 'publisher';
@@ -108,7 +100,6 @@ const Room = () => {
           if (err) console.error('Error publishing stream:', err);
         });
 
-        // Add self to participants
         setParticipants((prev) => [...prev, { id: 'publisher', name: userName }]);
       }
     });
@@ -140,31 +131,44 @@ const Room = () => {
     );
   };
 
+  const toggleChat = () => {
+    setIsChatVisible((prev) => !prev);
+  };
+
   return (
     <div className="room-container">
       <header className="room-header">
         <h1 className="room-title">Room: {roomName}</h1>
-        <div className="user-info">You are logged in as: {userName}</div>
+        <button className="toggle-chat-btn" onClick={toggleChat}>
+          {isChatVisible ? 'Hide Chat' : 'Show Chat'}
+        </button>
       </header>
-      <div ref={videoContainerRef} className={`video-grid video-grid-${participants.length}`}></div>
-      <div className="chat-container">
-        <div className="chat-messages">
-          {messages.map((msg, index) => (
-            <div key={index} className="chat-message">
-              <strong>{msg.sender}: </strong> {msg.message}
+      <div className="room-content">
+        <div
+          ref={videoContainerRef}
+          className={`video-grid video-grid-${participants.length} ${isChatVisible ? 'with-chat' : ''}`}
+        ></div>
+        {isChatVisible && (
+          <div className="chat-container">
+            <div className="chat-messages">
+              {messages.map((msg, index) => (
+                <div key={index} className="chat-message">
+                  <strong>{msg.sender}: </strong> {msg.message}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="chat-input">
-          <input
-            ref={chatInputRef}
-            type="text"
-            value={newMessage}
-            placeholder="Type a message..."
-            onChange={(e) => setNewMessage(e.target.value)}
-          />
-          <button onClick={sendMessage}>Send</button>
-        </div>
+            <div className="chat-input">
+              <input
+                ref={chatInputRef}
+                type="text"
+                value={newMessage}
+                placeholder="Type a message..."
+                onChange={(e) => setNewMessage(e.target.value)}
+              />
+              <button onClick={sendMessage}>Send</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
