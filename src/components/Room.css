@@ -1,3 +1,8 @@
+html, body {
+  height: 100%; /* Pastikan elemen root memenuhi viewport */
+  margin: 0; /* Hilangkan margin default */
+}
+
 /* General Styling */
 .room-container {
   display: flex;
