@@ -117,13 +117,12 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 15px; /* Perbesar padding */
+  padding: 10px;
   background-color: #222;
   position: fixed;
   bottom: 0;
   width: 100%;
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
-  z-index: 10; /* Pastikan berada di atas video */
 }
 
 .control-btn {
@@ -147,4 +146,8 @@ html, body {
 
 .control-btn.disabled:hover {
   background-color: #f44336;
+}
+
+.control-btn i {
+  font-size: 1.2rem;
 }
