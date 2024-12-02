@@ -7,12 +7,14 @@ const Room = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const videoContainerRef = useRef(null);
-  const chatInputRef = useRef(null);
+  const publisherRef = useRef(null);
 
   const [participants, setParticipants] = useState([]);
+  const [isVideoEnabled, setVideoEnabled] = useState(true);
+  const [isAudioEnabled, setAudioEnabled] = useState(true);
+  const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [isChatVisible, setIsChatVisible] = useState(false); // Toggle chat visibility
 
   const { sessionId, token, roomName, userName } = state || {};
 
@@ -26,7 +28,6 @@ const Room = () => {
     const appId = process.env.REACT_APP_VONAGE_APP_ID;
     const session = OT.initSession(appId, sessionId);
 
-    // Handle stream creation
     session.on('streamCreated', (event) => {
       const connectionData = JSON.parse(event.stream.connection.data || '{}');
       const subscriberName = connectionData.name || 'Unknown User';
@@ -53,24 +54,33 @@ const Room = () => {
           height: '100%',
         },
         (err) => {
-          if (err) console.error('Error subscribing to stream:', err);
+          if (err) {
+            console.error('Error subscribing to stream:', err);
+          }
         }
       );
 
       setParticipants((prev) => [...prev, { id: event.stream.streamId, name: subscriberName }]);
     });
 
-    // Handle stream destruction
     session.on('streamDestroyed', (event) => {
       const streamId = event.stream.streamId;
       const element = document.getElementById(`subscriber-${streamId}`);
-      if (element) element.remove();
+      if (element) {
+        element.remove();
+      }
       setParticipants((prev) => prev.filter((p) => p.id !== streamId));
     });
 
-    // Handle receiving messages
     session.on('signal:chat', (event) => {
-      const sender = event.from.connectionId === session.connection.connectionId ? 'You' : event.from.data;
+      let sender = 'Unknown';
+      try {
+        const senderData = JSON.parse(event.from.data || '{}');
+        sender = senderData.name || 'Unknown';
+      } catch (err) {
+        console.error('Error parsing sender data:', err);
+      }
+
       const message = event.data;
       setMessages((prev) => [...prev, { sender, message }]);
     });
@@ -79,6 +89,8 @@ const Room = () => {
       if (err) {
         console.error('Error connecting to session:', err);
       } else {
+        console.log(`Connected to session as ${userName}`);
+
         const publisherContainer = document.createElement('div');
         publisherContainer.className = 'video-container';
         publisherContainer.id = 'publisher';
@@ -100,6 +112,8 @@ const Room = () => {
           if (err) console.error('Error publishing stream:', err);
         });
 
+        publisherRef.current = publisher;
+
         setParticipants((prev) => [...prev, { id: 'publisher', name: userName }]);
       }
     });
@@ -109,16 +123,35 @@ const Room = () => {
     };
   }, [sessionId, token, userName, navigate]);
 
+  const toggleVideo = () => {
+    if (publisherRef.current) {
+      const isCurrentlyEnabled = publisherRef.current.stream.hasVideo;
+      publisherRef.current.publishVideo(!isCurrentlyEnabled);
+      setVideoEnabled(!isCurrentlyEnabled);
+    }
+  };
+
+  const toggleAudio = () => {
+    if (publisherRef.current) {
+      const isCurrentlyEnabled = publisherRef.current.stream.hasAudio;
+      publisherRef.current.publishAudio(!isCurrentlyEnabled);
+      setAudioEnabled(!isCurrentlyEnabled);
+    }
+  };
+
+  const toggleChat = () => {
+    setShowChat(!showChat);
+  };
+
   const sendMessage = () => {
     if (newMessage.trim() === '') return;
 
-    const appId = process.env.REACT_APP_VONAGE_APP_ID;
-    const session = OT.initSession(appId, sessionId);
+    const session = OT.initSession(process.env.REACT_APP_VONAGE_APP_ID, sessionId);
 
     session.signal(
       {
         type: 'chat',
-        data: newMessage,
+        data: JSON.stringify({ name: userName, message: newMessage }),
       },
       (error) => {
         if (error) {
@@ -131,44 +164,55 @@ const Room = () => {
     );
   };
 
-  const toggleChat = () => {
-    setIsChatVisible((prev) => !prev);
-  };
-
   return (
     <div className="room-container">
       <header className="room-header">
         <h1 className="room-title">Room: {roomName}</h1>
-        <button className="toggle-chat-btn" onClick={toggleChat}>
-          {isChatVisible ? 'Hide Chat' : 'Show Chat'}
-        </button>
+        <div className="user-info">You are logged in as: {userName}</div>
       </header>
-      <div className="room-content">
+      <div className="main-content">
         <div
           ref={videoContainerRef}
-          className={`video-grid video-grid-${participants.length} ${isChatVisible ? 'with-chat' : ''}`}
+          className={`video-grid video-grid-${participants.length}`}
         ></div>
-        {isChatVisible && (
+        {showChat && (
           <div className="chat-container">
             <div className="chat-messages">
               {messages.map((msg, index) => (
                 <div key={index} className="chat-message">
-                  <strong>{msg.sender}: </strong> {msg.message}
+                  <strong>{msg.sender}: </strong>
+                  {msg.message}
                 </div>
               ))}
             </div>
             <div className="chat-input">
               <input
-                ref={chatInputRef}
                 type="text"
                 value={newMessage}
-                placeholder="Type a message..."
                 onChange={(e) => setNewMessage(e.target.value)}
+                placeholder="Type a message..."
               />
               <button onClick={sendMessage}>Send</button>
             </div>
           </div>
         )}
+      </div>
+      <div className="room-controls">
+        <button
+          className={`control-btn ${isVideoEnabled ? 'enabled' : 'disabled'}`}
+          onClick={toggleVideo}
+        >
+          <i className={`fas ${isVideoEnabled ? 'fa-video' : 'fa-video-slash'}`}></i>
+        </button>
+        <button
+          className={`control-btn ${isAudioEnabled ? 'enabled' : 'disabled'}`}
+          onClick={toggleAudio}
+        >
+          <i className={`fas ${isAudioEnabled ? 'fa-microphone' : 'fa-microphone-slash'}`}></i>
+        </button>
+        <button className="control-btn" onClick={toggleChat}>
+          <i className={`fas ${showChat ? 'fa-comments' : 'fa-comment-dots'}`}></i>
+        </button>
       </div>
     </div>
   );
