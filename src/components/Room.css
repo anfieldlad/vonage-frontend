@@ -132,11 +132,11 @@ html, body {
   padding: 10px;
   font-size: 1.5rem;
   color: #fff;
-  background-color: #555;
+  background-color: #555; /* Warna default tombol */
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
 }
 
 .control-btn:hover {
@@ -145,24 +145,16 @@ html, body {
 }
 
 .control-btn.active {
-  background-color: #f44336; /* Warna merah saat aktif */
+  background-color: #4caf50; /* Warna hijau sama dengan hover */
 }
 
 .control-btn i {
   font-size: 1.5rem; /* Ukuran ikon */
-  color: #fff; /* Warna ikon default */
-  transition: color 0.3s ease, transform 0.3s ease; /* Animasi halus untuk perubahan warna dan transformasi */
+  color: inherit; /* Warna ikon mengikuti warna tombol */
+  transition: transform 0.2s ease; /* Efek zoom hanya pada hover */
 }
 
-.control-btn.enabled:hover i {
-  color: #4caf50; /* Warna hijau saat hover (aktif) */
-}
-
-.control-btn.disabled:hover i {
-  color: #f44336; /* Warna merah saat hover (nonaktif) */
-}
-
-.control-btn i:hover {
+.control-btn:hover i {
   transform: scale(1.2); /* Animasi zoom kecil saat hover */
 }
 
