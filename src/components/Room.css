@@ -1,39 +1,65 @@
-/* Video Grid */
+/* General Styling */
+.room-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #121212;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+}
+
+.room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #333;
+}
+
+.room-title {
+  font-size: 1.5rem;
+  color: #74ebd5;
+}
+
+.user-info {
+  font-size: 1rem;
+  color: #ccc;
+}
+
+/* Grid Layout */
 .video-grid {
   flex: 1;
   display: grid;
   gap: 1rem;
   padding: 1rem;
-  justify-content: center;
-  align-items: center;
+  justify-items: center; /* Centers the video horizontally */
+  align-items: center;  /* Centers the video vertically */
 }
 
-/* Full Screen for 1 Participant */
+/* Grid Layout for 1 Participant */
 .video-grid-1 {
   grid-template-columns: 1fr;
-  height: 100%; /* Memastikan video memenuhi layar */
-  justify-content: center;
-  align-items: center;
+  grid-template-rows: 1fr;
+  height: 100%; /* Ensures full height for single participant */
 }
 
-/* Two Columns for 2 Participants */
+/* Grid Layout for 2 Participants */
 .video-grid-2 {
   grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
 }
 
-/* Two Rows for 3-4 Participants */
+/* Grid Layout for 3-4 Participants */
 .video-grid-3, .video-grid-4 {
   grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
 }
 
-/* Three Columns for 5-6 Participants */
+/* Grid Layout for 5-6 Participants */
 .video-grid-5, .video-grid-6 {
   grid-template-columns: repeat(3, 1fr);
-}
-
-/* Three Columns for 7-9 Participants */
-.video-grid-7, .video-grid-8, .video-grid-9 {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
 }
 
 /* Video Container */
@@ -43,11 +69,8 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%; /* Pastikan tinggi video mengikuti grid */
-  width: 100%; /* Pastikan lebar video mengikuti grid */
+  width: 100%; /* Full width of grid item */
+  aspect-ratio: 16 / 9; /* Keeps video aspect ratio */
 }
 
 /* Name Tag */
