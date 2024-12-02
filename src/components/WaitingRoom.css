@@ -86,32 +86,38 @@
   background-color: #000;
 }
 
-/* Control buttons */
-.controls {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
+/* Controls with icon buttons */
 .controls .btn {
-  padding: 0.8rem 1.2rem;
-  font-size: 1rem;
-  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.8rem;
+  width: 50px;
+  height: 50px;
+  font-size: 1.2rem;
   color: #fff;
+  background-color: #74ebd5;
   border: none;
-  border-radius: 5px;
+  border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-
-.controls .btn.enabled {
-  background-color: #74ebd5;
 }
 
 .controls .btn.disabled {
   background-color: #ccc;
 }
 
+.controls .btn i {
+  font-size: 1.5rem;
+}
+
 .controls .btn:hover.enabled {
   background-color: #5ad3b0;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 1rem;
 }

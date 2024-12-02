@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './WaitingRoom.css'; // Pastikan CSS file sudah ada
+import './WaitingRoom.css'; // Pastikan CSS sudah benar
 
 const WaitingRoom = () => {
   const [roomName, setRoomName] = useState('');
@@ -14,7 +14,6 @@ const WaitingRoom = () => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-      // Fetch apiKey, sessionId, and token from backend
       const response = await fetch(`${BACKEND_URL}/api/join-room`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -26,8 +25,6 @@ const WaitingRoom = () => {
       }
 
       const { apiKey, sessionId, token } = await response.json();
-
-      // Navigate to the Room component with session details
       navigate('/room', { state: { apiKey, sessionId, token, roomName, userName, role: 'publisher' } });
     } catch (error) {
       console.error('Error joining room:', error.message);
@@ -52,7 +49,6 @@ const WaitingRoom = () => {
     }
   };
 
-  // Start video preview
   const startVideo = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -64,7 +60,6 @@ const WaitingRoom = () => {
     }
   };
 
-  // Stop video preview
   const stopVideo = () => {
     const stream = videoRef.current?.srcObject;
     stream?.getTracks().forEach((track) => track.stop());
@@ -84,11 +79,11 @@ const WaitingRoom = () => {
       <div className="form-container">
         <video ref={videoRef} autoPlay playsInline muted className="video-preview"></video>
         <div className="controls">
-          <button onClick={toggleVideo} className={videoEnabled ? 'btn enabled' : 'btn disabled'}>
-            {videoEnabled ? 'Disable Video' : 'Enable Video'}
+          <button onClick={toggleVideo} className={`btn ${videoEnabled ? 'enabled' : 'disabled'}`}>
+            <i className={`fas ${videoEnabled ? 'fa-video' : 'fa-video-slash'}`}></i>
           </button>
-          <button onClick={toggleAudio} className={audioEnabled ? 'btn enabled' : 'btn disabled'}>
-            {audioEnabled ? 'Disable Audio' : 'Enable Audio'}
+          <button onClick={toggleAudio} className={`btn ${audioEnabled ? 'enabled' : 'disabled'}`}>
+            <i className={`fas ${audioEnabled ? 'fa-microphone' : 'fa-microphone-slash'}`}></i>
           </button>
         </div>
         <input
