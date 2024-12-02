@@ -59,8 +59,8 @@ html, body {
 }
 
 /* Chat Visibility */
-.video-grid.chat-visible {
-  width: calc(100% - 400px); /* Adjust width to make room for chat bar */
+.video-grid-wrapper.chat-visible {
+  width: calc(100% - 400px); /* Adjust wrapper width to make room for chat bar */
 }
 
 /* Specific Layouts for Participants */
@@ -108,8 +108,8 @@ html, body {
 /* Video Container */
 .video-container {
   position: relative;
-  width: 90vw; /* Limit width to 90% of the viewport width */
-  max-width: 100%; /* Ensure it fits within the viewport width */
+  width: 90%; /* Set the width relative to the container */
+  max-width: 800px; /* Set a max width for the video */
   aspect-ratio: 16 / 9; /* Maintain aspect ratio */
   max-height: calc(100vh - 140px); /* Account for header and control bar height */
   background-color: #000;
@@ -309,7 +309,7 @@ html, body {
     top: auto;
   }
 
-  .video-grid.chat-visible {
+  .video-grid-wrapper.chat-visible {
     width: 100%;
   }
 
