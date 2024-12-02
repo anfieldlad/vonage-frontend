@@ -76,7 +76,11 @@ const Room = () => {
         publisherContainer.appendChild(nameTag);
         videoContainerRef.current.appendChild(publisherContainer);
 
-        const publisher = OT.initPublisher(publisherContainer, { insertMode: 'append' });
+        const publisher = OT.initPublisher(publisherContainer, {
+            insertMode: 'append',
+            width: '100%', // Set width ke 100% dari kontainer
+            height: '100%' // Set height ke 100% dari kontainer
+          });
         session.publish(publisher, (err) => {
           if (err) console.error('Error publishing stream:', err);
         });
