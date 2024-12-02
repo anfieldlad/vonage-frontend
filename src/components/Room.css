@@ -149,7 +149,21 @@ html, body {
 }
 
 .control-btn i {
-  pointer-events: none; /* Klik hanya berlaku di tombol, bukan di ikon */
+  font-size: 1.5rem; /* Ukuran ikon */
+  color: #fff; /* Warna ikon default */
+  transition: color 0.3s ease, transform 0.3s ease; /* Animasi halus untuk perubahan warna dan transformasi */
+}
+
+.control-btn.enabled:hover i {
+  color: #4caf50; /* Warna hijau saat hover (aktif) */
+}
+
+.control-btn.disabled:hover i {
+  color: #f44336; /* Warna merah saat hover (nonaktif) */
+}
+
+.control-btn i:hover {
+  transform: scale(1.2); /* Animasi zoom kecil saat hover */
 }
 
 /* Chat Sidebar */
