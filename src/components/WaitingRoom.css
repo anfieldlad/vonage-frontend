@@ -1,70 +1,76 @@
 /* General container styling */
 .waiting-room-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #74ebd5, #acb6e5);
-    font-family: 'Arial', sans-serif;
-    color: #333;
-  }
-  
-  /* Title styling */
-  .title {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  }
-  
-  /* Form container styling */
-  .form-container {
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 400px;
-  }
-  
-  /* Input field styling */
-  .input {
-    width: 100%;
-    padding: 0.8rem;
-    margin: 0.5rem 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-  }
-  
-  /* Radio group styling */
-  .radio-group {
-    margin: 1rem 0;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .radio-group label {
-    font-size: 1rem;
-    color: #333;
-  }
-  
-  /* Button styling */
-  .join-btn {
-    background-color: #74ebd5;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-    width: 100%;
-    text-transform: uppercase;
-    transition: background-color 0.3s ease;
-  }
-  
-  .join-btn:hover {
-    background-color: #5ad3b0;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #74ebd5, #acb6e5);
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+/* Title styling */
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Form container styling */
+.form-container {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+}
+
+/* Input field styling */
+.input {
+  width: 100%; /* Konsistensi dengan kontainer */
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Tambahkan ini untuk memastikan padding dihitung */
+}
+
+.input:focus {
+  border-color: #74ebd5;
+  outline: none;
+  box-shadow: 0 0 5px rgba(116, 235, 213, 0.5);
+}
+
+/* Radio group styling */
+.radio-group {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.radio-group label {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Button styling */
+.join-btn {
+  background-color: #74ebd5;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%; /* Sesuaikan dengan lebar input */
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.join-btn:hover {
+  background-color: #5ad3b0;
+}
