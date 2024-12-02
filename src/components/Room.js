@@ -12,9 +12,9 @@ const Room = () => {
   const [participants, setParticipants] = useState([]);
   const [isVideoEnabled, setVideoEnabled] = useState(true);
   const [isAudioEnabled, setAudioEnabled] = useState(true);
-  const [showChat, setShowChat] = useState(false);
+  const [isChatVisible, setChatVisible] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [chatInput, setChatInput] = useState('');
 
   const { sessionId, token, roomName, userName } = state || {};
 
@@ -28,6 +28,7 @@ const Room = () => {
     const appId = process.env.REACT_APP_VONAGE_APP_ID;
     const session = OT.initSession(appId, sessionId);
 
+    // Handle stream creation
     session.on('streamCreated', (event) => {
       const connectionData = JSON.parse(event.stream.connection.data || '{}');
       const subscriberName = connectionData.name || 'Unknown User';
@@ -45,6 +46,7 @@ const Room = () => {
       subscriberContainer.appendChild(nameTag);
       videoContainerRef.current.appendChild(subscriberContainer);
 
+      // Subscribe to the stream
       session.subscribe(
         event.stream,
         subscriberContainer,
@@ -60,9 +62,11 @@ const Room = () => {
         }
       );
 
+      // Add participant to state
       setParticipants((prev) => [...prev, { id: event.stream.streamId, name: subscriberName }]);
     });
 
+    // Handle stream destruction
     session.on('streamDestroyed', (event) => {
       const streamId = event.stream.streamId;
       const element = document.getElementById(`subscriber-${streamId}`);
@@ -72,19 +76,15 @@ const Room = () => {
       setParticipants((prev) => prev.filter((p) => p.id !== streamId));
     });
 
+    // Handle chat messages
     session.on('signal:chat', (event) => {
-      let sender = 'Unknown';
-      try {
-        const senderData = JSON.parse(event.from.data || '{}');
-        sender = senderData.name || 'Unknown';
-      } catch (err) {
-        console.error('Error parsing sender data:', err);
-      }
+      const { data, from } = event;
+      const fromSelf = from.connectionId === session.connection.connectionId;
 
-      const message = event.data;
-      setMessages((prev) => [...prev, { sender, message }]);
+      setMessages((prev) => [...prev, { text: data, sender: fromSelf ? 'You' : event.from.data }]);
     });
 
+    // Connect to session
     session.connect(token, (err) => {
       if (err) {
         console.error('Error connecting to session:', err);
@@ -114,6 +114,7 @@ const Room = () => {
 
         publisherRef.current = publisher;
 
+        // Add self to participants
         setParticipants((prev) => [...prev, { id: 'publisher', name: userName }]);
       }
     });
@@ -140,28 +141,26 @@ const Room = () => {
   };
 
   const toggleChat = () => {
-    setShowChat(!showChat);
+    setChatVisible(!isChatVisible);
   };
 
   const sendMessage = () => {
-    if (newMessage.trim() === '') return;
-
-    const session = OT.initSession(process.env.REACT_APP_VONAGE_APP_ID, sessionId);
-
-    session.signal(
-      {
-        type: 'chat',
-        data: JSON.stringify({ name: userName, message: newMessage }),
-      },
-      (error) => {
-        if (error) {
-          console.error('Error sending signal:', error);
-        } else {
-          setMessages((prev) => [...prev, { sender: 'You', message: newMessage }]);
-          setNewMessage('');
+    if (chatInput.trim() && OT) {
+      const session = OT.initSession(process.env.REACT_APP_VONAGE_APP_ID, sessionId);
+      session.signal(
+        {
+          type: 'chat',
+          data: chatInput,
+        },
+        (error) => {
+          if (error) {
+            console.error('Error sending signal:', error);
+          } else {
+            setChatInput('');
+          }
         }
-      }
-    );
+      );
+    }
   };
 
   return (
@@ -170,33 +169,10 @@ const Room = () => {
         <h1 className="room-title">Room: {roomName}</h1>
         <div className="user-info">You are logged in as: {userName}</div>
       </header>
-      <div className="main-content">
-        <div
-          ref={videoContainerRef}
-          className={`video-grid video-grid-${participants.length}`}
-        ></div>
-        {showChat && (
-          <div className="chat-container">
-            <div className="chat-messages">
-              {messages.map((msg, index) => (
-                <div key={index} className="chat-message">
-                  <strong>{msg.sender}: </strong>
-                  {msg.message}
-                </div>
-              ))}
-            </div>
-            <div className="chat-input">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type a message..."
-              />
-              <button onClick={sendMessage}>Send</button>
-            </div>
-          </div>
-        )}
-      </div>
+      <div
+        ref={videoContainerRef}
+        className={`video-grid video-grid-${participants.length}`}
+      ></div>
       <div className="room-controls">
         <button
           className={`control-btn ${isVideoEnabled ? 'enabled' : 'disabled'}`}
@@ -210,10 +186,39 @@ const Room = () => {
         >
           <i className={`fas ${isAudioEnabled ? 'fa-microphone' : 'fa-microphone-slash'}`}></i>
         </button>
-        <button className="control-btn" onClick={toggleChat}>
-          <i className={`fas ${showChat ? 'fa-comments' : 'fa-comment-dots'}`}></i>
+        <button
+          className="control-btn"
+          onClick={toggleChat}
+        >
+          <i className="fas fa-comments"></i>
         </button>
       </div>
+      {isChatVisible && (
+        <div className="chat-sidebar">
+          <div className="chat-header">
+            <h3>In-call Messages</h3>
+            <button onClick={toggleChat} className="close-chat-btn">
+              Close
+            </button>
+          </div>
+          <div className="chat-messages">
+            {messages.map((msg, index) => (
+              <div key={index} className="chat-message">
+                <strong>{msg.sender}:</strong> {msg.text}
+              </div>
+            ))}
+          </div>
+          <div className="chat-input">
+            <input
+              type="text"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              placeholder="Type a message"
+            />
+            <button onClick={sendMessage}>Send</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
