@@ -38,50 +38,74 @@ html, body {
 /* Video Grid Wrapper */
 .video-grid-wrapper {
   flex: 1;
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: all 0.3s ease;
+  overflow: hidden;
+  width: 100%;
 }
 
 /* Video Grid Styling */
 .video-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
+  display: grid;
+  gap: 1rem;
   padding: 1rem;
   box-sizing: border-box;
-  transition: all 0.3s ease; /* Smooth resizing when chat sidebar appears */
+  transition: width 0.3s ease; /* Smooth resizing when chat sidebar appears */
+  justify-content: center;
+  align-items: center;
+  max-height: 100%;
+  width: 100%;
 }
 
 /* Chat Visibility */
 .video-grid.chat-visible {
-  width: 75%; /* Reduce the width to make room for the chat sidebar */
+  width: calc(100% - 400px); /* Reduce the width when chat sidebar is visible */
 }
 
-/* Layout for Participants */
-.video-grid.video-grid-1,
-.video-grid.video-grid-2,
-.video-grid.video-grid-3,
-.video-grid.video-grid-4,
-.video-grid.video-grid-5,
+/* Specific Layouts for Participants */
+
+/* Layout for 1 Participant */
+.video-grid.video-grid-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  justify-content: center;
+}
+
+/* Layout for 2 Participants */
+.video-grid.video-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: auto;
+}
+
+/* Layout for 3 Participants */
+.video-grid.video-grid-3 {
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: auto;
+}
+
+/* Layout for 4 Participants */
+.video-grid.video-grid-4 {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+/* Layout for 5 Participants */
+.video-grid.video-grid-5 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+/* Layout for 6 Participants */
 .video-grid.video-grid-6 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
-  width: 100%;
-  max-width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
 /* Video Container */
 .video-container {
   position: relative;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  padding-top: 56.25%; /* Aspect ratio 16:9 */
   background-color: #000;
   border-radius: 8px;
   overflow: hidden;
@@ -193,7 +217,7 @@ html, body {
   right: 0;
   top: 0;
   bottom: 0;
-  width: 25%;
+  width: 400px;
   max-width: 400px;
   background: #1e1e1e;
   color: #fff;
