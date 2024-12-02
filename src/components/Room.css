@@ -39,7 +39,7 @@ html, body {
 .video-grid-wrapper {
   flex: 1;
   display: flex;
-  justify-content: flex-start; /* Align to the left when chat bar appears */
+  justify-content: center;
   align-items: center;
   overflow: hidden;
   width: 100%;
@@ -74,9 +74,9 @@ html, body {
 
 /* Video Container for 1 Participant */
 .video-grid.video-grid-1 .video-container {
-  width: 100%;
-  max-width: 800px; /* Limit the max-width for a single participant to ensure proper height display */
-  height: auto;
+  width: 90%; /* Limit width to 90% of the available container */
+  aspect-ratio: 16 / 9; /* Maintain aspect ratio */
+  max-height: 90vh; /* Ensure it doesn’t overflow vertically */
 }
 
 /* Layout for 2 Participants */
@@ -111,7 +111,8 @@ html, body {
 .video-container {
   position: relative;
   width: 100%;
-  max-width: calc(100vh * 16 / 9); /* Ensure aspect ratio 16:9 */
+  max-width: 90%; /* Ensure it doesn’t use more than 90% of the available container width */
+  height: auto; /* Adjust height automatically */
   padding-top: 56.25%; /* Aspect ratio 16:9 */
   background-color: #000;
   border-radius: 8px;
@@ -128,7 +129,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Cover the available space while maintaining the aspect ratio */
+  object-fit: contain; /* Contain the available space while maintaining the aspect ratio */
 }
 
 /* Disabled Video State */
