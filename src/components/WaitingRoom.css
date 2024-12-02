@@ -61,3 +61,7 @@ body {
 .join-btn:hover {
   background: #21867a;
 }
+
+.join-btn:active {
+  background: #1d6f63;
+}
