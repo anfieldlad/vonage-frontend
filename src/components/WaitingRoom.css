@@ -74,3 +74,44 @@
 .join-btn:hover {
   background-color: #5ad3b0;
 }
+
+/* Video preview */
+.video-preview {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  background-color: #000;
+}
+
+/* Control buttons */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.controls .btn {
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.controls .btn.enabled {
+  background-color: #74ebd5;
+}
+
+.controls .btn.disabled {
+  background-color: #ccc;
+}
+
+.controls .btn:hover.enabled {
+  background-color: #5ad3b0;
+}
