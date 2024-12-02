@@ -82,7 +82,7 @@ html, body {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  width: 100%; /* Fully fill the grid area */
+  width: 95%;
   height: 100%; /* Fully fill the grid area */
   aspect-ratio: 16 / 9; /* Maintain 16:9 aspect ratio */
 }
