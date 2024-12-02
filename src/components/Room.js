@@ -17,7 +17,7 @@ const Room = () => {
     const [chatInput, setChatInput] = useState('');
 
     const { sessionId, token, roomName, userName } = state || {};
-    const sessionRef = useRef(null); // Simpan session untuk digunakan di chat
+    const sessionRef = useRef(null); // Store session for chat signals
 
     useEffect(() => {
         if (!sessionId || !token) {
@@ -28,7 +28,7 @@ const Room = () => {
 
         const appId = process.env.REACT_APP_VONAGE_APP_ID;
         const session = OT.initSession(appId, sessionId);
-        sessionRef.current = session; // Simpan session di ref
+        sessionRef.current = session; // Store session in ref
 
         // Handle stream creation
         session.on('streamCreated', (event) => {
@@ -175,7 +175,7 @@ const Room = () => {
             </header>
             <div
                 ref={videoContainerRef}
-                className={`video-grid ${isChatVisible ? 'chat-visible' : ''}`}
+                className={`video-grid video-grid-${participants.length} ${isChatVisible ? 'chat-visible' : ''}`}
             ></div>
             <div className="room-controls">
                 <button
