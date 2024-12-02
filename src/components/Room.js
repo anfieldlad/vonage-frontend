@@ -191,10 +191,10 @@ const Room = () => {
                     <i className={`fas ${isAudioEnabled ? 'fa-microphone' : 'fa-microphone-slash'}`}></i>
                 </button>
                 <button
-                    className="control-btn"
+                    className={`control-btn ${isChatVisible ? 'active' : ''}`}
                     onClick={toggleChat}
                 >
-                    <i className="fas fa-comments"></i>
+                    <i className={`fas ${isChatVisible ? 'fa-times' : 'fa-comments'}`}></i>
                 </button>
             </div>
             {isChatVisible && (
@@ -202,7 +202,7 @@ const Room = () => {
                     <div className="chat-header">
                         <h3>In-call Messages</h3>
                         <button onClick={toggleChat} className="close-chat-btn">
-                            Close
+                            <i className="fas fa-times"></i>
                         </button>
                     </div>
                     <div className="chat-messages">

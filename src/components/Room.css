@@ -136,19 +136,20 @@ html, body {
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.control-btn.enabled:hover {
-  background-color: #4caf50;
+.control-btn:hover {
+  background-color: #4caf50; /* Warna hijau saat hover */
+  transform: scale(1.1); /* Efek zoom */
 }
 
-.control-btn.disabled:hover {
-  background-color: #f44336;
+.control-btn.active {
+  background-color: #f44336; /* Warna merah saat aktif */
 }
 
 .control-btn i {
-  font-size: 1.2rem;
+  pointer-events: none; /* Klik hanya berlaku di tombol, bukan di ikon */
 }
 
 /* Chat Sidebar */
