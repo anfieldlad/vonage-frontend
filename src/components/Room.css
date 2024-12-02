@@ -35,21 +35,22 @@ html, body {
 
 /* Video Grid Styling */
 .video-grid {
-  display: flex; /* Switch to flex for easier centering */
+  display: flex; /* Flexbox untuk centering lebih mudah */
   flex-wrap: wrap; /* Allow wrapping for multiple participants */
-  justify-content: center; /* Horizontally center the content */
-  align-items: center; /* Vertically center the content */
+  justify-content: center; /* Center secara horizontal */
+  align-items: center; /* Center secara vertikal */
   gap: 1rem;
   padding: 1rem;
-  height: calc(100vh - 200px); /* Adjust height to account for header and footer controls */
+  height: calc(100vh - 200px); /* Sesuaikan tinggi kontainer untuk header dan kontrol */
+  width: auto; /* Width akan mengikuti aspect ratio */
+  aspect-ratio: 16 / 9; /* Menjaga proporsi */
   transition: margin-right 0.3s ease, width 0.3s ease;
-  width: 100%; /* Full width for better alignment */
-  box-sizing: border-box; /* Include padding in width calculation */
+  box-sizing: border-box; /* Mengikutkan padding dalam perhitungan lebar */
 }
 
 /* Chat Visibility */
 .video-grid.chat-visible {
-  width: calc(100% - 25%); /* Deduct chat sidebar width */
+  width: calc(100% - 25%); /* Kurangi lebar untuk sidebar chat */
 }
 
 /* Layout for Participants */
@@ -109,7 +110,7 @@ html, body {
   border-radius: 5px;
   font-size: 1rem;
   z-index: 10;
-  display: none; /* Initially hidden */
+  display: none; /* Awalnya tersembunyi */
 }
 
 .video-container.loading::before {
@@ -151,7 +152,7 @@ html, body {
   bottom: 0;
   width: 100%;
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
-  z-index: 99;
+  z-index: 999;
 }
 
 .control-btn {
