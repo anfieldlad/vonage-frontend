@@ -39,10 +39,11 @@ html, body {
 .video-grid-wrapper {
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start; /* Align to the left when chat bar appears */
   align-items: center;
   overflow: hidden;
   width: 100%;
+  transition: margin-right 0.3s ease; /* Smooth animation for chat bar */
 }
 
 /* Video Grid Styling */
@@ -60,51 +61,50 @@ html, body {
 
 /* Chat Visibility */
 .video-grid.chat-visible {
-  width: calc(100% - 400px); /* Reduce the width when chat sidebar is visible */
+  width: calc(100% - 400px); /* Adjust width to make room for chat bar */
 }
 
 /* Specific Layouts for Participants */
 
 /* Layout for 1 Participant */
 .video-grid.video-grid-1 {
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  justify-content: center;
+  grid-template-columns: 1fr;
+  place-items: center;
 }
 
 /* Layout for 2 Participants */
 .video-grid.video-grid-2 {
   grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: auto;
+  justify-content: center;
 }
 
 /* Layout for 3 Participants */
 .video-grid.video-grid-3 {
   grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: auto;
 }
 
 /* Layout for 4 Participants */
 .video-grid.video-grid-4 {
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, 1fr);
 }
 
 /* Layout for 5 Participants */
 .video-grid.video-grid-5 {
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
 /* Layout for 6 Participants */
 .video-grid.video-grid-6 {
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, 1fr);
 }
 
 /* Video Container */
 .video-container {
   position: relative;
   width: 100%;
+  max-width: calc(100vh * 16 / 9); /* Ensure aspect ratio 16:9 */
   padding-top: 56.25%; /* Aspect ratio 16:9 */
   background-color: #000;
   border-radius: 8px;
@@ -112,9 +112,10 @@ html, body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Video Elements */
+/* Video Elements - Ensure They Cover the Container */
 .video-container .OT_publisher,
-.video-container .OT_subscriber {
+.video-container .OT_subscriber,
+.video-container .OT_video-element {
   position: absolute;
   top: 0;
   left: 0;
