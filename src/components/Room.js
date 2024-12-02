@@ -194,7 +194,7 @@ const Room = () => {
                     className={`control-btn ${isChatVisible ? 'active' : ''}`}
                     onClick={toggleChat}
                 >
-                    <i className={`fas ${isChatVisible ? 'fa-comment-dots' : 'fa-comments'}`}></i>
+                    <i className={`fas ${isChatVisible ? 'fa-comments' : 'fa-comment-slash'}`}></i>
                 </button>
             </div>
             {isChatVisible && (
