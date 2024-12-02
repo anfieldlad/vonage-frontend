@@ -40,9 +40,9 @@ html, body {
   padding: 1rem;
   justify-items: center;
   align-items: center;
-  height: calc(100vh - 150px); /* Account for header and controls */
+  height: 82%; /* Account for header and controls */
   transition: margin-right 0.3s ease, width 0.3s ease;
-  width: 100%; /* Default full width */
+  width: 82%; /* Default full width */
 }
 
 /* Chat Visibility */
