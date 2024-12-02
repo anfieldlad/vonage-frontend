@@ -39,21 +39,20 @@ html, body {
 .video-grid-wrapper {
   flex: 1;
   display: flex;
-  justify-content: flex-start; /* Align content to the left */
+  justify-content: center;
   align-items: center;
-  overflow: hidden;
   width: 100%;
-  transition: margin-right 0.3s ease; /* Smooth animation for chat bar */
+  overflow: hidden;
+  transition: width 0.3s ease; /* Smooth animation for chat bar */
 }
 
 /* Video Grid Styling */
 .video-grid {
   display: grid;
   gap: 1rem;
-  padding: 1rem;
   box-sizing: border-box;
   transition: width 0.3s ease; /* Smooth resizing when chat sidebar appears */
-  justify-content: flex-start; /* Make sure the video stays on the left */
+  justify-items: center;
   align-items: center;
   max-height: 100%;
   width: 100%;
@@ -69,71 +68,66 @@ html, body {
 /* Layout for 1 Participant */
 .video-grid.video-grid-1 {
   grid-template-columns: 1fr;
-  justify-items: start;
-}
-
-/* Video Container for 1 Participant */
-.video-grid.video-grid-1 .video-container {
-  width: 90vw; /* Limit width to 90% of the viewport width */
-  max-width: 100%; /* Ensure it fits within the viewport width */
-  aspect-ratio: 16 / 9; /* Maintain aspect ratio */
-  max-height: calc(90vh - 70px); /* Ensure it doesn’t overflow vertically, accounting for control buttons height */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+  justify-items: center;
 }
 
 /* Layout for 2 Participants */
 .video-grid.video-grid-2 {
   grid-template-columns: repeat(2, 1fr);
-  justify-content: start;
+  justify-items: center;
 }
 
 /* Layout for 3 Participants */
 .video-grid.video-grid-3 {
   grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr 1fr;
+  justify-items: center;
 }
 
 /* Layout for 4 Participants */
 .video-grid.video-grid-4 {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
+  justify-items: center;
 }
 
 /* Layout for 5 Participants */
 .video-grid.video-grid-5 {
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr;
+  justify-items: center;
 }
 
 /* Layout for 6 Participants */
 .video-grid.video-grid-6 {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
+  justify-items: center;
 }
 
 /* Video Container */
 .video-container {
   position: relative;
-  width: 100%;
-  height: 0;
-  padding-bottom: 56.25%; /* Aspect ratio 16:9 */
+  width: 90vw; /* Limit width to 90% of the viewport width */
+  max-width: 100%; /* Ensure it fits within the viewport width */
+  aspect-ratio: 16 / 9; /* Maintain aspect ratio */
+  max-height: calc(100vh - 140px); /* Account for header and control bar height */
   background-color: #000;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Video Elements - Ensure They Cover the Container */
+/* Video Elements */
 .video-container .OT_publisher,
 .video-container .OT_subscriber,
 .video-container .OT_video-element {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Ensure the entire video is visible without zooming */
+  object-fit: contain; /* Ensure video does not get zoomed or cropped */
 }
 
 /* Disabled Video State */
