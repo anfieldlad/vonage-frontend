@@ -144,10 +144,6 @@ html, body {
   transform: scale(1.1); /* Efek zoom */
 }
 
-.control-btn.active {
-  background-color: #4caf50; /* Warna hijau sama dengan hover */
-}
-
 .control-btn i {
   font-size: 1.5rem; /* Ukuran ikon */
   color: inherit; /* Warna ikon mengikuti warna tombol */
