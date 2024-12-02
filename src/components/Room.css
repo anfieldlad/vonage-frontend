@@ -69,7 +69,14 @@ html, body {
 /* Layout for 1 Participant */
 .video-grid.video-grid-1 {
   grid-template-columns: 1fr;
-  place-items: center;
+  justify-items: center;
+}
+
+/* Video Container for 1 Participant */
+.video-grid.video-grid-1 .video-container {
+  width: 100%;
+  max-width: 800px; /* Limit the max-width for a single participant to ensure proper height display */
+  height: auto;
 }
 
 /* Layout for 2 Participants */
