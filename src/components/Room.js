@@ -8,8 +8,11 @@ const Room = () => {
     const navigate = useNavigate();
     const videoContainerRef = useRef(null);
     const [participants, setParticipants] = useState([]);
+    const [videoEnabled, setVideoEnabled] = useState(true);
+    const [audioEnabled, setAudioEnabled] = useState(true);
+    const publisherRef = useRef(null);
 
-    const { sessionId, token, roomName, userName, role } = state || {};
+    const { sessionId, token, roomName, userName } = state || {};
 
     useEffect(() => {
         if (!sessionId || !token) {
@@ -45,13 +48,11 @@ const Room = () => {
                 subscriberContainer,
                 {
                     insertMode: 'append',
-                    width: '100%', // Gunakan 100% dari kontainer
-                    height: '100%', // Sesuaikan dengan kontainer
+                    width: '100%',
+                    height: '100%',
                 },
                 (err) => {
-                    if (err) {
-                        console.error('Error subscribing to stream:', err);
-                    }
+                    if (err) console.error('Error subscribing to stream:', err);
                 }
             );
 
@@ -89,14 +90,15 @@ const Room = () => {
 
                 const publisher = OT.initPublisher(publisherContainer, {
                     insertMode: 'append',
-                    width: '100%', // Set width ke 100% dari kontainer
-                    height: '100%' // Set height ke 100% dari kontainer
+                    width: '100%',
+                    height: '100%',
                 });
+
+                publisherRef.current = publisher;
                 session.publish(publisher, (err) => {
                     if (err) console.error('Error publishing stream:', err);
                 });
 
-                // Add self to participants
                 setParticipants((prev) => [...prev, { id: 'publisher', name: userName }]);
             }
         });
@@ -106,16 +108,41 @@ const Room = () => {
         };
     }, [sessionId, token, userName, navigate]);
 
+    const toggleVideo = () => {
+        if (publisherRef.current) {
+            const videoTrack = publisherRef.current.stream.getVideoTracks()[0];
+            if (videoTrack) {
+                videoTrack.enabled = !videoTrack.enabled;
+                setVideoEnabled(videoTrack.enabled);
+            }
+        }
+    };
+
+    const toggleAudio = () => {
+        if (publisherRef.current) {
+            const audioTrack = publisherRef.current.stream.getAudioTracks()[0];
+            if (audioTrack) {
+                audioTrack.enabled = !audioTrack.enabled;
+                setAudioEnabled(audioTrack.enabled);
+            }
+        }
+    };
+
     return (
         <div className="room-container">
             <header className="room-header">
                 <h1 className="room-title">Room: {roomName}</h1>
                 <div className="user-info">You are logged in as: {userName}</div>
             </header>
-            <div
-                ref={videoContainerRef}
-                className={`video-grid video-grid-${participants.length}`}
-            ></div>
+            <div ref={videoContainerRef} className={`video-grid video-grid-${participants.length}`}></div>
+            <footer className="room-controls">
+                <button onClick={toggleVideo} className={`control-btn ${videoEnabled ? 'enabled' : 'disabled'}`}>
+                    <i className={`fas ${videoEnabled ? 'fa-video' : 'fa-video-slash'}`}></i>
+                </button>
+                <button onClick={toggleAudio} className={`control-btn ${audioEnabled ? 'enabled' : 'disabled'}`}>
+                    <i className={`fas ${audioEnabled ? 'fa-microphone' : 'fa-microphone-slash'}`}></i>
+                </button>
+            </footer>
         </div>
     );
 };

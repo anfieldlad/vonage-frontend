@@ -108,3 +108,39 @@ html, body {
   top: 0;
   left: 0;
 }
+
+/* Footer Controls */
+.room-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: #222;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+  padding: 10px;
+  font-size: 1.5rem;
+  color: #fff;
+  background-color: #555;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.control-btn.enabled:hover {
+  background-color: #4caf50;
+}
+
+.control-btn.disabled:hover {
+  background-color: #f44336;
+}
