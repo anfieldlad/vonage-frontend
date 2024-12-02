@@ -39,9 +39,12 @@
 
 /* Grid Layout for 1 Participant */
 .video-grid-1 {
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-  height: 100%; /* Ensures full height for single participant */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Isi seluruh tinggi kontainer */
+  width: 100%; /* Isi seluruh lebar kontainer */
+  overflow: hidden; /* Potong elemen yang melebihi kontainer */
 }
 
 /* Grid Layout for 2 Participants */
@@ -63,15 +66,12 @@
 }
 
 /* Video Container */
+
 .video-container {
-  position: relative;
-  background-color: #000;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   width: 100%;
-  height: auto;
+  max-height: 100%; /* Batasi tinggi maksimum video */
   aspect-ratio: 16 / 9;
+  overflow: hidden; /* Potong jika elemen melebihi ukuran */
 }
 
 /* Name Tag */
@@ -89,9 +89,10 @@
 }
 
 .OT_publisher, .OT_subscriber {
-  width: 100% !important; /* Pastikan mengikuti ukuran kontainer */
-  height: 100% !important; /* Pastikan mengikuti ukuran kontainer */
-  position: absolute; /* Isi seluruh kontainer */
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Pastikan video tetap dalam batas */
+  position: absolute;
   top: 0;
   left: 0;
 }
