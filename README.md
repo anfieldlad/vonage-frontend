@@ -18,7 +18,8 @@ This frontend application is part of a complete solution and is designed to work
 
 - **Node.js** (version 14 or above)
 - **npm** or **yarn** for package management
-- **Vonage Video API** credentials (app ID, session ID, and token)
+- **Vonage Video API** credentials (app ID)
+- **Backend URL** for Vonage backend service
 
 ### Installation
 
@@ -45,12 +46,11 @@ This frontend application is part of a complete solution and is designed to work
 
 3. **Configure Environment Variables**:
 
-   Create a `.env` file in the root directory with your Vonage credentials:
+   Create a `.env` file in the root directory with your Vonage credentials and backend URL:
 
    ```
    REACT_APP_VONAGE_APP_ID=YOUR_APP_ID
-   REACT_APP_VONAGE_SESSION_ID=YOUR_SESSION_ID
-   REACT_APP_VONAGE_TOKEN=YOUR_TOKEN
+   REACT_APP_BACKEND_URL=YOUR_BACKEND_URL
    ```
 
 ### Running the Application
@@ -79,10 +79,19 @@ The app will be available at [http://localhost:3000](http://localhost:3000).
 
 ## Project Structure
 
+- **`/public`**: Contains public assets like HTML, icons, and the manifest.
+  - **`index.html`**: The main HTML template.
+  - **`favicon.ico`**, **`manifest.json`**, **`logo192.png`**, **`logo512.png`**: General assets.
+
 - **`/src`**: Contains the source code.
-  - **`Room.js`**: Main component for managing the video call, chat, and controls.
-  - **`Room.css`**: Styling for the video call interface.
   - **`components/`**: Reusable UI components.
+    - **`Room.js` & `Room.css`**: Main components for managing the video call, chat, and controls.
+    - **`WaitingRoom.js` & `WaitingRoom.css`**: Component for users to wait before entering the main video room.
+  - **`api.js`**: Utility for interacting with the backend API to manage session data.
+  - **`App.js` & `App.css`**: Entry point for the main application and main styles.
+  - **`index.js` & `index.css`**: Application bootstrap and initial styles.
+  - **`vitals.js`**: Performance monitoring utilities.
+  - **`reportWebVitals.js`**, **`setupTests.js`**: Utility scripts for monitoring and testing.
 
 ## Known Issues
 
@@ -112,3 +121,4 @@ For further questions or issues, please contact [Bobby Ananta Dioriza](https://g
 ---
 
 Happy coding! 😊
+
